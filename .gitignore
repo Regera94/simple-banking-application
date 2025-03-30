@@ -102,3 +102,6 @@ build/reports/
 
 # Ignore generated files
 /generated/
+
+# Ignore Spring Boot dev config
+application-*.yml
