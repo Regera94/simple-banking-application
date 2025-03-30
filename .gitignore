@@ -104,4 +104,4 @@ build/reports/
 /generated/
 
 # Ignore Spring Boot dev config
-/application-*.yml
+src/main/resources/application-*.yml
