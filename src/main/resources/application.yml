@@ -1,7 +1,7 @@
 server:
   servlet:
     context-path: /accounts
-  port: 5502
+  port: 5500
 
 spring:
   datasource:

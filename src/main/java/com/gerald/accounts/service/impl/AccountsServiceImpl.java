@@ -3,6 +3,7 @@ package com.gerald.accounts.service.impl;
 import com.gerald.accounts.dto.CustomerDto;
 import com.gerald.accounts.entity.Accounts;
 import com.gerald.accounts.entity.Customers;
+import com.gerald.accounts.exception.CustomerAlreadyExistsException;
 import com.gerald.accounts.mappers.Mapper;
 import com.gerald.accounts.repository.AccountsRepository;
 import com.gerald.accounts.repository.CustomerRepository;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
 
 import static com.gerald.accounts.AccountsConstants.AccountsConstants.ADDRESS;
@@ -26,20 +28,23 @@ public class AccountsServiceImpl implements AccountsService {
     private final AccountsRepository accountsRepository;
     private final Mapper mapper;
 
-
     @Override
     @Transactional
-    public CustomerDto createAccount(CustomerDto customerDto) {
+    public void createAccount(CustomerDto customerDto) {
         log.info("Creating account {}", customerDto);
-        var newCustomer = mapper.mapToCustomerEntity(customerDto);
-        var newAccount = createNewAccount(newCustomer);
 
-        customerRepository.save(newCustomer);
-        accountsRepository.save(newAccount);
+        Optional<Customers> existingMobileNumber = customerRepository.findByMobileNumber(customerDto.mobileNumber());
+        Optional<Customers> existingEmail = customerRepository.findByEmail(customerDto.email());
+        if (existingMobileNumber.isPresent() || existingEmail.isPresent()) {
+            throw new CustomerAlreadyExistsException("Customer already exists" + customerDto.mobileNumber() + " " + customerDto.email());
+        }
+        else {
+            var newCustomer = mapper.mapToCustomerEntity(customerDto);
+            var newAccount = createNewAccount(newCustomer);
 
-        log.info("Creating account for customer : {}",newAccount);
-
-        return customerDto;
+            customerRepository.save(newCustomer);
+            accountsRepository.save(newAccount);
+        }
     }
 
     private Accounts createNewAccount(Customers customer) {

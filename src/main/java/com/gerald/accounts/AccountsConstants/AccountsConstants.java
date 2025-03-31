@@ -8,7 +8,6 @@ public class AccountsConstants {
 
     public static final String  CURRENT_ACCOUNT = "CA";
     public static final String  ADDRESS = "123 Main Street, Nairobi, Kenya";
-    public static final String  STATUS_201 = "201";
     public static final String  MESSAGE_201 = "Account created successfully";
     public static final String  STATUS_200 = "200";
     public static final String  MESSAGE_200 = "Request processed successfully";
